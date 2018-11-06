@@ -7,7 +7,8 @@ import (
 	"log"
 	"strings"
 
-	builder "transaction-builder-xdr/transaction"
+	builder "transaction-builder-xdr/transaction/builder"
+	envelope "transaction-builder-xdr/transaction/envelope"
 
 	"github.com/stellar/go/hash"
 	"github.com/stellar/go/keypair"
@@ -109,10 +110,15 @@ func ExampleUsingTransactionBuilder() {
 		panic(err)
 	}
 
-	op := xdr.PaymentOp{
+	body := xdr.PaymentOp{
 		Destination: destination,
 		Asset:       asset,
 		Amount:      50 * 10000000,
+	}
+	op := xdr.Operation{}
+	op.Body, err = xdr.NewOperationBody(xdr.OperationTypePayment, body)
+	if err != nil {
+		panic(err)
 	}
 
 	memo, err := xdr.NewMemo(xdr.MemoTypeMemoNone, nil)
@@ -131,12 +137,21 @@ func ExampleUsingTransactionBuilder() {
 	}
 
 	transactionBuilder := builder.GetInstance(&tx)
-	transactionBuilder.MakeOperation(xdr.OperationTypePayment, op)
-	err = transactionBuilder.Sign("SDKJ2BUKQ5TCMSLRQBAFSEVJ3LBXFGHEKKPTYNCDWSOJ4CFGFR5SKRME", "Test SDF Network ; September 2015")
+	opB64, err := xdr.MarshalBase64(op)
 	if err != nil {
 		panic(err)
 	}
-	txeB64, err := transactionBuilder.ToBase64()
+	transactionBuilder.MakeOperation(opB64)
+	tB64, err := transactionBuilder.ToBase64()
+	if err != nil {
+		panic(err)
+	}
+	transactionEnvelope := envelope.GetInstance(tB64)
+	err = transactionEnvelope.Sign("SDKJ2BUKQ5TCMSLRQBAFSEVJ3LBXFGHEKKPTYNCDWSOJ4CFGFR5SKRME", "Test SDF Network ; September 2015")
+	if err != nil {
+		panic(err)
+	}
+	txeB64, err := transactionEnvelope.ToBase64()
 	if err != nil {
 		panic(err)
 	}
@@ -152,8 +167,6 @@ func ExampleDecodeTransaction() {
 	var tx xdr.TransactionEnvelope
 	bytesRead, err := xdr.Unmarshal(b64r, &tx)
 
-	fmt.Println(tx)
-
 	fmt.Printf("read %d bytes\n", bytesRead)
 
 	if err != nil {
@@ -161,7 +174,6 @@ func ExampleDecodeTransaction() {
 	}
 
 	fmt.Printf("This tx has %d operations\n", len(tx.Tx.Operations))
-	// {{{PublicKeyTypePublicKeyTypeEd25519 0xc0000d01c0} 10 1 <nil> {MemoTypeMemoNone <nil> <nil> <nil> <nil>} [{<nil> {OperationTypePayment <nil> 0xc00008afc0 <nil> <nil> <nil> <nil> <nil> <nil> <nil> <nil> <nil>}}] {0}} [{[169 255 177 139] [220 176 78 186 72 68 194 101 221 73 40 187 205 53 2 228 199 217 51 202 41 69 98 52 73 159 28 177 193 142 253 171 244 104 149 223 103 52 109 25 120 150 19 103 10 238 250 5 212 107 48 37 72 132 164 218 63 16 69 135 98 252 227 8]}]}
-	// Output: read 192 bytes
+	// Output: read 196 bytes
 	// This tx has 1 operations
 }

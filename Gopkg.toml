@@ -25,10 +25,22 @@
 #   unused-packages = true
 
 
-[prune]
-  go-tests = true
-  unused-packages = true
+[[constraint]]
+  name = "github.com/onsi/ginkgo"
+  version = "1.6.0"
+
+[[constraint]]
+  name = "github.com/onsi/gomega"
+  version = "1.4.2"
+
+[[constraint]]
+  name = "github.com/pkg/errors"
+  version = "0.8.0"
 
 [[constraint]]
   branch = "master"
-  name = "github.com/Kafakk/xdr-builder"
+  name = "github.com/stellar/go"
+
+[prune]
+  go-tests = true
+  unused-packages = true
