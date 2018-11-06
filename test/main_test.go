@@ -123,22 +123,15 @@ func ExampleUsingTransactionBuilder() {
 		panic(err)
 	}
 
-	body, err := xdr.NewOperationBody(xdr.OperationTypePayment, op)
-	if err != nil {
-		panic(err)
-	}
-
 	tx := xdr.Transaction{
 		SourceAccount: source,
 		Fee:           10,
 		SeqNum:        xdr.SequenceNumber(1),
 		Memo:          memo,
-		Operations: []xdr.Operation{
-			{Body: body},
-		},
 	}
 
 	transactionBuilder := builder.GetInstance(&tx)
+	transactionBuilder.MakeOperation(xdr.OperationTypePayment, op)
 	err = transactionBuilder.Sign("SDKJ2BUKQ5TCMSLRQBAFSEVJ3LBXFGHEKKPTYNCDWSOJ4CFGFR5SKRME", "Test SDF Network ; September 2015")
 	if err != nil {
 		panic(err)

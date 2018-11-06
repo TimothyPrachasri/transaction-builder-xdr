@@ -45,7 +45,7 @@ func (transactionBuilder *TransactionBuilder) MakeDefaultFee() error {
 
 // MakeOperation method is a method in which TransactionBuilder make a TransactionXDR based on operationType and paymentOperationForm.
 func (transactionBuilder *TransactionBuilder) MakeOperation(operationType xdr.OperationType, paymentOperationForm interface{}) (err error) {
-	operation := xdr.Operation{SourceAccount: &xdr.AccountId{}}
+	operation := xdr.Operation{}
 	operation.Body, err = xdr.NewOperationBody(operationType, paymentOperationForm)
 	transactionBuilder.TransactionXDR.Operations = append(transactionBuilder.TransactionXDR.Operations, operation)
 	return
