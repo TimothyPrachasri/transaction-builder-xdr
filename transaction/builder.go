@@ -125,10 +125,10 @@ func (transactionBuilder *TransactionBuilder) SignAll(forms []SignerForm) (err e
 func (transactionBuilder *TransactionBuilder) ToBytesEncoded() ([]byte, error) {
 	var txBytes bytes.Buffer
 	_, err := xdr.Marshal(&txBytes, struct {
-		TransactionXDR *xdr.Transaction
+		TransactionXDR xdr.Transaction
 		Signatures     []xdr.DecoratedSignature `xdrmaxsize:"20"`
 	}{
-		transactionBuilder.TransactionXDR,
+		*transactionBuilder.TransactionXDR,
 		transactionBuilder.Signatures,
 	})
 	if err != nil {

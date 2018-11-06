@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"encoding/base64"
 	"fmt"
+	"log"
+	"strings"
 
 	builder "transaction-builder-xdr/transaction"
 
@@ -146,5 +148,27 @@ func ExampleUsingTransactionBuilder() {
 		panic(err)
 	}
 	fmt.Printf("tx base64: %s", txeB64)
-	// Output: tx base64: AAAAAQAAAAAYwhuYkgyXbRzs9/B35G9EWED9dU7uXHQxfk3qqf+xiwAAAAoAAAAAAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAABAAAAAJAqkCXqcDCKcdzuUze+sbAQKVap6Qw9n9F9kkPhHDM+AAAAAAAAAAAdzWUAAAAAAAAAAAGp/7GLAAAAQNywTrpIRMJl3Ukou801AuTH2TPKKUViNEmfHLHBjv2r9GiV32c0bRl4lhNnCu76BdRrMCVIhKTaPxBFh2L84wg=
+	// Output: tx base64: AAAAABjCG5iSDJdtHOz38Hfkb0RYQP11Tu5cdDF+Teqp/7GLAAAACgAAAAAAAAABAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAkCqQJepwMIpx3O5TN76xsBApVqnpDD2f0X2SQ+EcMz4AAAAAAAAAAB3NZQAAAAAAAAAAAan/sYsAAABA3LBOukhEwmXdSSi7zTUC5MfZM8opRWI0SZ8cscGO/av0aJXfZzRtGXiWE2cK7voF1GswJUiEpNo/EEWHYvzjCA==
+}
+
+func ExampleDecodeTransaction() {
+	data := "AAAAABjCG5iSDJdtHOz38Hfkb0RYQP11Tu5cdDF+Teqp/7GLAAAACgAAAAAAAAABAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAkCqQJepwMIpx3O5TN76xsBApVqnpDD2f0X2SQ+EcMz4AAAAAAAAAAB3NZQAAAAAAAAAAAan/sYsAAABA3LBOukhEwmXdSSi7zTUC5MfZM8opRWI0SZ8cscGO/av0aJXfZzRtGXiWE2cK7voF1GswJUiEpNo/EEWHYvzjCA=="
+	rawr := strings.NewReader(data)
+	b64r := base64.NewDecoder(base64.StdEncoding, rawr)
+
+	var tx xdr.TransactionEnvelope
+	bytesRead, err := xdr.Unmarshal(b64r, &tx)
+
+	fmt.Println(tx)
+
+	fmt.Printf("read %d bytes\n", bytesRead)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Printf("This tx has %d operations\n", len(tx.Tx.Operations))
+	// {{{PublicKeyTypePublicKeyTypeEd25519 0xc0000d01c0} 10 1 <nil> {MemoTypeMemoNone <nil> <nil> <nil> <nil>} [{<nil> {OperationTypePayment <nil> 0xc00008afc0 <nil> <nil> <nil> <nil> <nil> <nil> <nil> <nil> <nil>}}] {0}} [{[169 255 177 139] [220 176 78 186 72 68 194 101 221 73 40 187 205 53 2 228 199 217 51 202 41 69 98 52 73 159 28 177 193 142 253 171 244 104 149 223 103 52 109 25 120 150 19 103 10 238 250 5 212 107 48 37 72 132 164 218 63 16 69 135 98 252 227 8]}]}
+	// Output: read 192 bytes
+	// This tx has 1 operations
 }
