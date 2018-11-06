@@ -9,7 +9,7 @@ type TransactionBuilder struct {
 	TransactionXDR *xdr.Transaction
 }
 
-// OperationForm is a form for building operationForm and send it to makeAll method
+// OperationForm is a form for building operationForm and send it to makeAll method.
 type OperationForm struct {
 	operationType        xdr.OperationType
 	paymentOperationForm interface{}
