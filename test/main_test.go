@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/base64"
 	"fmt"
-	"log"
 
 	builder "transaction-builder-xdr/transaction"
 
@@ -61,7 +60,6 @@ func ExampleLowLevelTransaction() {
 	}
 
 	var txBytes bytes.Buffer
-	fmt.Println(tx, "tx")
 	_, err = xdr.Marshal(&txBytes, tx)
 	if err != nil {
 		panic(err)
@@ -139,10 +137,14 @@ func ExampleUsingTransactionBuilder() {
 	}
 
 	transactionBuilder := builder.GetInstance(&tx)
-	err = transactionBuilder.Sign(skp.Address(), "Test SDF Network ; September 2015")
-	log.Println(err, "error of sign")
+	err = transactionBuilder.Sign("SDKJ2BUKQ5TCMSLRQBAFSEVJ3LBXFGHEKKPTYNCDWSOJ4CFGFR5SKRME", "Test SDF Network ; September 2015")
+	if err != nil {
+		panic(err)
+	}
 	txeB64, err := transactionBuilder.ToBase64()
-	log.Println(err, "error of tobase64")
+	if err != nil {
+		panic(err)
+	}
 	fmt.Printf("tx base64: %s", txeB64)
-	// Output: tx base64: AAAAABjCG5iSDJdtHOz38Hfkb0RYQP11Tu5cdDF+Teqp/7GLAAAACgAAAAAAAAABAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAkCqQJepwMIpx3O5TN76xsBApVqnpDD2f0X2SQ+EcMz4AAAAAAAAAAB3NZQAAAAAAAAAAAan/sYsAAABAIAWtiYQfI5rp4ZGE98rmyvfXvVX0+340nkEjYYDhFVFE7FCJERjlChY+pgR8THv7jgbtEgPZAgwJwXSrZh7mAw==
+	// Output: tx base64: AAAAAQAAAAAYwhuYkgyXbRzs9/B35G9EWED9dU7uXHQxfk3qqf+xiwAAAAoAAAAAAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAABAAAAAJAqkCXqcDCKcdzuUze+sbAQKVap6Qw9n9F9kkPhHDM+AAAAAAAAAAAdzWUAAAAAAAAAAAGp/7GLAAAAQNywTrpIRMJl3Ukou801AuTH2TPKKUViNEmfHLHBjv2r9GiV32c0bRl4lhNnCu76BdRrMCVIhKTaPxBFh2L84wg=
 }
