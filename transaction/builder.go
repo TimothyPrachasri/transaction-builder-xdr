@@ -105,25 +105,6 @@ func (transactionBuilder *TransactionBuilder) Sign(signer, networkPassPhrase str
 	if err != nil {
 		return errors.Wrap(err, "sign tx failed")
 	}
-	/**
-	encode transaction to xdr and user with seed sign this hash via low level
-	*/
-	// var txBytes bytes.Buffer
-	// _, err = xdr.Marshal(&txBytes, transactionBuilder.TransactionXDR)
-	// if err != nil {
-	// 	panic(err)
-	// }
-
-	// txHash := hash.Hash(txBytes.Bytes())
-	// signature, err := kp.Sign(txHash[:])
-	// if err != nil {
-	// 	panic(err)
-	// }
-
-	// ds := xdr.DecoratedSignature{
-	// 	Hint:      kp.Hint(),
-	// 	Signature: xdr.Signature(signature[:]),
-	// }
 
 	transactionBuilder.Signatures = append(transactionBuilder.Signatures, sig)
 	return nil
