@@ -104,7 +104,6 @@ func (transactionBuilder *TransactionBuilder) Sign(signer, networkPassPhrase str
 	if err != nil {
 		return errors.Wrap(err, "sign tx failed")
 	}
-
 	transactionBuilder.Signatures = append(transactionBuilder.Signatures, sig)
 	return nil
 }
@@ -149,7 +148,7 @@ func (transactionBuilder *TransactionBuilder) ToBase64() (string, error) {
 
 // GetInstance is like a new object method in OOP
 func GetInstance(transaction ...*xdr.Transaction) (result TransactionBuilder) {
-	if len(transaction) == 0 || len(transaction) > 1 {
+	if len(transaction) == 1 {
 		result = TransactionBuilder{TransactionXDR: transaction[0]}
 		return
 	}
