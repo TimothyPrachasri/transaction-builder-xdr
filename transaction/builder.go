@@ -1,6 +1,9 @@
 package transactionbuilder
 
 import (
+	"bytes"
+	"encoding/base64"
+
 	"github.com/pkg/errors"
 	"github.com/stellar/go/keypair"
 	"github.com/stellar/go/network"
@@ -64,6 +67,33 @@ func (transactionBuilder *TransactionBuilder) Sign(signer, networkPassPhrase str
 
 	transactionBuilder.Signatures = append(transactionBuilder.Signatures, sig)
 	return nil
+}
+
+// ToBytesEncoded encodes the builder's underlying envelope to XDR using xdr based Marshal
+func (transactionBuilder *TransactionBuilder) ToBytesEncoded() ([]byte, error) {
+	var txBytes bytes.Buffer
+	_, err := xdr.Marshal(&txBytes, struct {
+		TransactionXDR *xdr.Transaction
+		Signatures     []xdr.DecoratedSignature `xdrmaxsize:"20"`
+	}{
+		transactionBuilder.TransactionXDR,
+		transactionBuilder.Signatures,
+	})
+	if err != nil {
+		return nil, errors.Wrap(err, "marshal xdr failed")
+	}
+
+	return txBytes.Bytes(), nil
+}
+
+// ToBase64 change format of XDR encoded into base64 string
+func (transactionBuilder *TransactionBuilder) ToBase64() (string, error) {
+	bs, err := transactionBuilder.ToBytesEncoded()
+	if err != nil {
+		return "", errors.Wrap(err, "get raw bytes failed")
+	}
+
+	return base64.StdEncoding.EncodeToString(bs), nil
 }
 
 // SignAll is similar to Sign method but it will receive an array of SignerForm which contains signer and networkPassPhrase.
