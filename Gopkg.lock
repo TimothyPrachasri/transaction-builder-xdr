@@ -107,7 +107,7 @@
     "xdr",
   ]
   pruneopts = "UT"
-  revision = "4791a38ef2611994db9b841f0d2181f5ed4a20ca"
+  revision = "05057665ac1987bdacc4a057f94e71c4285e0522"
 
 [[projects]]
   branch = "master"
@@ -131,11 +131,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:bf563be850c4ba68c4de69cd10e3c8b19a6c42b7be70b6d6416b3cf77d1f0208"
+  digest = "1:e2503f590982f6c0cc06abd7b94b17ded6804bada8eb79af753b5fb676dfdecc"
   name = "golang.org/x/sys"
   packages = ["unix"]
   pruneopts = "UT"
-  revision = "7155702f2d47d94b134229da97195d0130cab001"
+  revision = "3a76605856fddce5718553cbb8bd50ca492a7274"
 
 [[projects]]
   digest = "1:aa4d6967a3237f8367b6bf91503964a77183ecf696f1273e8ad3551bb4412b5f"
