@@ -17,6 +17,12 @@ type TransactionBuilder struct {
 	BaseFee        uint64
 }
 
+// MakeMemo create memo for transaction.
+func (transactionBuilder *TransactionBuilder) MakeMemo(memoType xdr.MemoType, value interface{}) (err error) {
+	transactionBuilder.TransactionXDR.Memo, err = xdr.NewMemo(memoType, value)
+	return
+}
+
 // MakeDefaultFee create a default fee for transaction in case fee is not defined yet
 func (transactionBuilder *TransactionBuilder) MakeDefaultFee() error {
 	if transactionBuilder.BaseFee == 0 {

@@ -32,5 +32,11 @@ var _ = Describe("Creating Transaction", func() {
 		transactionBuilder.MakeSequenceNumber(uint64(1))
 		accountId = xdr.AccountId{}
 		Expect(transactionBuilder.TransactionXDR.SeqNum).Should(BeEquivalentTo(1))
+
+		By("adding memo")
+		transactionBuilder = builder.GetInstance()
+		transactionBuilder.MakeMemo(xdr.MemoTypeMemoNone, nil)
+		accountId = xdr.AccountId{}
+		Expect(transactionBuilder.TransactionXDR.Memo.Type).Should(BeEquivalentTo(xdr.MemoTypeMemoNone))
 	})
 })
