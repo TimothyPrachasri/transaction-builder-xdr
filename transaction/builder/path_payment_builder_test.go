@@ -83,9 +83,10 @@ var _ = Describe("Creating transaction XDR with path payment operation", func() 
 	It("should return a correct unmarshalled bytes and operation", func() {
 		By("adding one Operation")
 		var (
-			tB64           string
-			unmarshalledTx xdr.Transaction
-			bytesRead      int
+			tB64               string
+			unmarshalledTx     xdr.Transaction
+			bytesRead          int
+			transactionBuilder builder.TransactionBuilder
 		)
 		tx := xdr.Transaction{
 			SourceAccount: Source,
@@ -93,7 +94,7 @@ var _ = Describe("Creating transaction XDR with path payment operation", func() 
 			SeqNum:        xdr.SequenceNumber(1),
 			Memo:          Memo,
 		}
-		transactionBuilder := builder.GetInstance(&tx)
+		transactionBuilder = builder.GetInstance(&tx)
 		transactionBuilder.MakeOperation(opB64)
 		tB64, err = transactionBuilder.ToBase64()
 		Expect(err).NotTo(HaveOccurred())

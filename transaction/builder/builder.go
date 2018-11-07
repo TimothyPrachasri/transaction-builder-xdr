@@ -73,6 +73,7 @@ func (transactionBuilder *TransactionBuilder) MakeSequenceNumber(sequenceNumber 
 
 // ToBytesEncoded encodes the builder's underlying envelope to XDR using xdr based Marshal
 func (transactionBuilder *TransactionBuilder) ToBytesEncoded() ([]byte, error) {
+	transactionBuilder.MakeDefaultFee()
 	var txBytes bytes.Buffer
 	_, err := xdr.Marshal(&txBytes, transactionBuilder.TransactionXDR)
 	if err != nil {
