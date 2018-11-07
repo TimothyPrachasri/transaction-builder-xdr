@@ -3,6 +3,14 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:3613f1ce4dab78f5085af34a8c99799c4bb578ed6dfe0cb699822e49e5a2db17"
+  name = "github.com/Kafakk/xdr-builder"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "2ba8e7558f5109109c11482396e850f1838366cb"
+
+[[projects]]
+  branch = "master"
   digest = "1:47ea4fbe2ab4aeb9808502c51e657041c2e49b36b83fc1c1a349135cdf16342f"
   name = "github.com/agl/ed25519"
   packages = [
@@ -95,13 +103,14 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:c3388b2a90a1396c2a98fae93412eb9f10cb44853032acfd37d572eb57218230"
+  digest = "1:9eb028e9211e46d1a578300a8f8f5f54cd4d85df7842cda62d4839a7940900cc"
   name = "github.com/stellar/go"
   packages = [
     "crc16",
     "hash",
     "keypair",
     "network",
+    "price",
     "strkey",
     "support/errors",
     "xdr",
@@ -190,6 +199,7 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/Kafakk/xdr-builder",
     "github.com/onsi/ginkgo",
     "github.com/onsi/gomega",
     "github.com/pkg/errors",

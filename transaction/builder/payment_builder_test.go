@@ -4,7 +4,6 @@ import (
 	"encoding/base64"
 	"strings"
 	builder "transaction-builder-xdr/transaction/builder"
-	enveloper "transaction-builder-xdr/transaction/envelope"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -36,7 +35,7 @@ var _ = BeforeSuite(func() {
 	}
 })
 
-var _ = Describe("Creating Transaction XDR", func() {
+var _ = Describe("Creating transaction XDR with payment operation", func() {
 	var (
 		opB64 string
 	)
@@ -54,18 +53,15 @@ var _ = Describe("Creating Transaction XDR", func() {
 		}
 		op := xdr.Operation{}
 		op.Body, err = xdr.NewOperationBody(xdr.OperationTypePayment, body)
-		if err != nil {
-			panic(err)
-		}
+		Expect(err).NotTo(HaveOccurred())
 		opB64, err = xdr.MarshalBase64(op)
 		Expect(err).NotTo(HaveOccurred())
 	})
 
-	It("should return a correct xdr enveloped transaction", func() {
+	It("should return a correct xdr transaction string", func() {
 		By("Adding One Payment Operation")
 		var (
-			tB64   string
-			txeB64 string
+			tB64 string
 		)
 		tx := xdr.Transaction{
 			SourceAccount: Source,
@@ -76,21 +72,15 @@ var _ = Describe("Creating Transaction XDR", func() {
 		transactionBuilder := builder.GetInstance(&tx)
 		transactionBuilder.MakeOperation(opB64)
 		tB64, err = transactionBuilder.ToBase64()
-		Expect(err).NotTo(HaveOccurred())
-		transactionEnvelope := enveloper.GetInstance(tB64)
-		err = transactionEnvelope.Sign("SDKJ2BUKQ5TCMSLRQBAFSEVJ3LBXFGHEKKPTYNCDWSOJ4CFGFR5SKRME", "Test SDF Network ; September 2015")
-		Expect(err).NotTo(HaveOccurred())
-		txeB64, err = transactionEnvelope.ToBase64()
-		Expect(txeB64).Should(Equal("AAAAABjCG5iSDJdtHOz38Hfkb0RYQP11Tu5cdDF+Teqp/7GLAAAACgAAAAAAAAABAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAkCqQJepwMIpx3O5TN76xsBApVqnpDD2f0X2SQ+EcMz4AAAAAAAAAAB3NZQAAAAAAAAAAAan/sYsAAABA3LBOukhEwmXdSSi7zTUC5MfZM8opRWI0SZ8cscGO/av0aJXfZzRtGXiWE2cK7voF1GswJUiEpNo/EEWHYvzjCA=="))
+		Expect(tB64).Should(Equal("AAAAABjCG5iSDJdtHOz38Hfkb0RYQP11Tu5cdDF+Teqp/7GLAAAACgAAAAAAAAABAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAkCqQJepwMIpx3O5TN76xsBApVqnpDD2f0X2SQ+EcMz4AAAAAAAAAAB3NZQAAAAAA"))
 	})
 
 	It("should return a correct unmarshalled bytes and operation", func() {
 		By("Adding One Payment Operation")
 		var (
-			tB64      string
-			txeB64    string
-			txe       xdr.TransactionEnvelope
-			bytesRead int
+			tB64           string
+			unmarshalledTx xdr.Transaction
+			bytesRead      int
 		)
 		tx := xdr.Transaction{
 			SourceAccount: Source,
@@ -101,15 +91,10 @@ var _ = Describe("Creating Transaction XDR", func() {
 		transactionBuilder := builder.GetInstance(&tx)
 		transactionBuilder.MakeOperation(opB64)
 		tB64, err = transactionBuilder.ToBase64()
-		Expect(err).NotTo(HaveOccurred())
-		transactionEnvelope := enveloper.GetInstance(tB64)
-		err = transactionEnvelope.Sign("SDKJ2BUKQ5TCMSLRQBAFSEVJ3LBXFGHEKKPTYNCDWSOJ4CFGFR5SKRME", "Test SDF Network ; September 2015")
-		Expect(err).NotTo(HaveOccurred())
-		txeB64, err = transactionEnvelope.ToBase64()
-		rawr := strings.NewReader(txeB64)
+		rawr := strings.NewReader(tB64)
 		b64r := base64.NewDecoder(base64.StdEncoding, rawr)
-		bytesRead, err = xdr.Unmarshal(b64r, &txe)
-		Expect(bytesRead).Should(Equal(196))
-		Expect(len(txe.Tx.Operations)).Should(Equal(1))
+		bytesRead, err = xdr.Unmarshal(b64r, &unmarshalledTx)
+		Expect(bytesRead).Should(Equal(120))
+		Expect(len(unmarshalledTx.Operations)).Should(Equal(1))
 	})
 })
