@@ -206,6 +206,7 @@
     "github.com/stellar/go/hash",
     "github.com/stellar/go/keypair",
     "github.com/stellar/go/network",
+    "github.com/stellar/go/price",
     "github.com/stellar/go/xdr",
   ]
   solver-name = "gps-cdcl"
