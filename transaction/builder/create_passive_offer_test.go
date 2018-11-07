@@ -42,7 +42,7 @@ var _ = Describe("Creating transaction XDR with payment operation", func() {
 	})
 
 	It("should return a correct xdr transaction string", func() {
-		By("Adding One Payment Operation")
+		By("adding one create passive offer operation")
 		var (
 			tB64 string
 		)
@@ -60,7 +60,7 @@ var _ = Describe("Creating transaction XDR with payment operation", func() {
 	})
 
 	It("should return a correct unmarshalled bytes and operation", func() {
-		By("Adding One Payment Operation")
+		By("adding one create passive offer operation")
 		var (
 			tB64           string
 			unmarshalledTx xdr.Transaction

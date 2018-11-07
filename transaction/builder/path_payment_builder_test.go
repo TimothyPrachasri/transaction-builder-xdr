@@ -49,7 +49,7 @@ var _ = Describe("Creating transaction XDR with path payment operation", func() 
 	})
 
 	It("should return a correct xdr transaction string", func() {
-		By("adding One Payment Operation")
+		By("adding one path payment operation")
 		var (
 			tB64 string
 		)
@@ -65,7 +65,7 @@ var _ = Describe("Creating transaction XDR with path payment operation", func() 
 		Expect(err).NotTo(HaveOccurred())
 		Expect(tB64).Should(Equal("AAAAABjCG5iSDJdtHOz38Hfkb0RYQP11Tu5cdDF+Teqp/7GLAAAACgAAAAAAAAABAAAAAAAAAAAAAAABAAAAAAAAAAIAAAABQUJDAAAAAAAIFNYJS7uXxTrL2yGlbGt9yJMu/LtaZAxq0b4Ht6QqPQAAAAA7msoAAAAAAJEE7TG5CAUVetC5u/vB41QBPtnX7IY25gdEgh3Ys249AAAAAUNERgAAAAAACBTWCUu7l8U6y9shpWxrfciTLvy7WmQMatG+B7ekKj0AAAAAEeGjAAAAAAEAAAAAAAAAAA=="))
 
-		By("adding two or more operation")
+		By("adding two or more path payment operation")
 		tx = xdr.Transaction{
 			SourceAccount: Source,
 			Fee:           10,
@@ -81,7 +81,7 @@ var _ = Describe("Creating transaction XDR with path payment operation", func() 
 	})
 
 	It("should return a correct unmarshalled bytes and operation", func() {
-		By("adding one Operation")
+		By("adding one path payment operation")
 		var (
 			tB64               string
 			unmarshalledTx     xdr.Transaction
@@ -105,7 +105,7 @@ var _ = Describe("Creating transaction XDR with path payment operation", func() 
 		Expect(bytesRead).Should(Equal(220))
 		Expect(len(unmarshalledTx.Operations)).Should(Equal(1))
 
-		By("adding two or more Operation")
+		By("adding two or more path payment operation")
 		tx = xdr.Transaction{
 			SourceAccount: Source,
 			Fee:           10,
