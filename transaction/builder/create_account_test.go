@@ -5,6 +5,8 @@ import (
 	"strings"
 	builder "transaction-builder-xdr/transaction/builder"
 
+	xdrBuilder "gitlab.com/lightnet-thailand/xdr-builder"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/stellar/go/xdr"
@@ -17,19 +19,8 @@ var _ = Describe("Creating transaction XDR with payment operation", func() {
 
 	BeforeEach(func() {
 		destinationPublicKey := "GDKV36XRERL7HVQ5GKRAV47ZLEPIZMFM7MMLEO4NKQOWFPL5NCIEW3GR"
-		var startingBalance uint64
-		startingBalance = 100
-		var destination xdr.AccountId
-		err = destination.SetAddress(destinationPublicKey)
-		Expect(err).NotTo(HaveOccurred())
-		body := xdr.CreateAccountOp{
-			Destination:     destination,
-			StartingBalance: xdr.Int64(startingBalance) * 10000000,
-		}
-		op := xdr.Operation{}
-		op.Body, err = xdr.NewOperationBody(xdr.OperationTypeCreateAccount, body)
-		Expect(err).NotTo(HaveOccurred())
-		opB64, err = xdr.MarshalBase64(op)
+		startingBalance := "12.21"
+		opB64, err = xdrBuilder.CreateAccount(SourceAddr, destinationPublicKey, startingBalance)
 		Expect(err).NotTo(HaveOccurred())
 	})
 
@@ -47,8 +38,9 @@ var _ = Describe("Creating transaction XDR with payment operation", func() {
 		transactionBuilder := builder.GetInstance(&tx)
 		transactionBuilder.MakeOperation(opB64)
 		tB64, err = transactionBuilder.ToBase64()
+		expected := "AAAAAFsAPNHwcy2ZPYftEEoI+dAPr0ZBN+vuXUKPEKcq2mmtAAAACgAAAAAAAAABAAAAAAAAAAAAAAABAAAAAQAAAABbADzR8HMtmT2H7RBKCPnQD69GQTfr7l1CjxCnKtpprQAAAAAAAAAA1V368SRX89YdMqIK8/lZHoywrPsYsjuNVB1ivX1okEsAAAAAB0cZIAAAAAA="
 		Expect(err).NotTo(HaveOccurred())
-		Expect(tB64).Should(Equal("AAAAABjCG5iSDJdtHOz38Hfkb0RYQP11Tu5cdDF+Teqp/7GLAAAACgAAAAAAAAABAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA1V368SRX89YdMqIK8/lZHoywrPsYsjuNVB1ivX1okEsAAAAAO5rKAAAAAAA="))
+		Expect(tB64).Should(Equal(expected))
 	})
 
 	It("should return a correct unmarshalled bytes and operation", func() {
@@ -70,7 +62,7 @@ var _ = Describe("Creating transaction XDR with payment operation", func() {
 		rawr := strings.NewReader(tB64)
 		b64r := base64.NewDecoder(base64.StdEncoding, rawr)
 		bytesRead, err = xdr.Unmarshal(b64r, &unmarshalledTx)
-		Expect(bytesRead).Should(Equal(116))
+		Expect(bytesRead).Should(Equal(152))
 		Expect(len(unmarshalledTx.Operations)).Should(Equal(1))
 	})
 })

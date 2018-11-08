@@ -16,6 +16,8 @@ func TestXdr(t *testing.T) {
 
 var (
 	SourceSeed string
+	SourceAddr string
+	DestSeed   string
 	DestAddr   string
 	PassPhrase string
 	Skp        keypair.KP
@@ -26,8 +28,10 @@ var (
 )
 
 var _ = BeforeSuite(func() {
-	SourceSeed = "SDKJ2BUKQ5TCMSLRQBAFSEVJ3LBXFGHEKKPTYNCDWSOJ4CFGFR5SKRME"
-	DestAddr = "GCICVEBF5JYDBCTR3TXFGN56WGYBAKKWVHUQYPM72F6ZEQ7BDQZT4NFZ"
+	SourceSeed = "SBMRYER7UW2KHXAUKFZC6YVRDX6TLBUL55RE37N7CNAGVRSVRW5GA6I4"
+	SourceAddr = "GBNQAPGR6BZS3GJ5Q7WRASQI7HIA7L2GIE36X3S5IKHRBJZK3JU22QOK"
+	DestSeed = "SAQSP6VPR5VY3SQTIXFHL7DISWSBG4ISXGR4HBTVSI2DIFCFMIHWGLNY"
+	DestAddr = "GB27PDURR3WM3OK33SPSKDZNULJI23FSODOAZ2IFR4MPAFY75RL6Q6QR"
 	Skp = keypair.MustParse(SourceSeed)
 	Dkp = keypair.MustParse(DestAddr)
 	PassPhrase = "Test SDF Network ; September 2015"

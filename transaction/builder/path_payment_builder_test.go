@@ -62,22 +62,9 @@ var _ = Describe("Creating transaction XDR with path payment operation", func() 
 		transactionBuilder := builder.GetInstance(&tx)
 		transactionBuilder.MakeOperation(opB64)
 		tB64, err = transactionBuilder.ToBase64()
+		expected := "AAAAAFsAPNHwcy2ZPYftEEoI+dAPr0ZBN+vuXUKPEKcq2mmtAAAACgAAAAAAAAABAAAAAAAAAAAAAAABAAAAAAAAAAIAAAABQUJDAAAAAAAIFNYJS7uXxTrL2yGlbGt9yJMu/LtaZAxq0b4Ht6QqPQAAAAA7msoAAAAAAJEE7TG5CAUVetC5u/vB41QBPtnX7IY25gdEgh3Ys249AAAAAUNERgAAAAAACBTWCUu7l8U6y9shpWxrfciTLvy7WmQMatG+B7ekKj0AAAAAEeGjAAAAAAEAAAAAAAAAAA=="
 		Expect(err).NotTo(HaveOccurred())
-		Expect(tB64).Should(Equal("AAAAABjCG5iSDJdtHOz38Hfkb0RYQP11Tu5cdDF+Teqp/7GLAAAACgAAAAAAAAABAAAAAAAAAAAAAAABAAAAAAAAAAIAAAABQUJDAAAAAAAIFNYJS7uXxTrL2yGlbGt9yJMu/LtaZAxq0b4Ht6QqPQAAAAA7msoAAAAAAJEE7TG5CAUVetC5u/vB41QBPtnX7IY25gdEgh3Ys249AAAAAUNERgAAAAAACBTWCUu7l8U6y9shpWxrfciTLvy7WmQMatG+B7ekKj0AAAAAEeGjAAAAAAEAAAAAAAAAAA=="))
-
-		By("adding two or more path payment operation")
-		tx = xdr.Transaction{
-			SourceAccount: Source,
-			Fee:           10,
-			SeqNum:        xdr.SequenceNumber(1),
-			Memo:          Memo,
-		}
-		transactionBuilder = builder.GetInstance(&tx)
-		operationsArr := []string{opB64, opB64, opB64}
-		transactionBuilder.MakeAllOperations(operationsArr)
-		tB64, err = transactionBuilder.ToBase64()
-		Expect(err).NotTo(HaveOccurred())
-		Expect(tB64).Should(Equal("AAAAABjCG5iSDJdtHOz38Hfkb0RYQP11Tu5cdDF+Teqp/7GLAAAACgAAAAAAAAABAAAAAAAAAAAAAAADAAAAAAAAAAIAAAABQUJDAAAAAAAIFNYJS7uXxTrL2yGlbGt9yJMu/LtaZAxq0b4Ht6QqPQAAAAA7msoAAAAAAJEE7TG5CAUVetC5u/vB41QBPtnX7IY25gdEgh3Ys249AAAAAUNERgAAAAAACBTWCUu7l8U6y9shpWxrfciTLvy7WmQMatG+B7ekKj0AAAAAEeGjAAAAAAEAAAAAAAAAAAAAAAIAAAABQUJDAAAAAAAIFNYJS7uXxTrL2yGlbGt9yJMu/LtaZAxq0b4Ht6QqPQAAAAA7msoAAAAAAJEE7TG5CAUVetC5u/vB41QBPtnX7IY25gdEgh3Ys249AAAAAUNERgAAAAAACBTWCUu7l8U6y9shpWxrfciTLvy7WmQMatG+B7ekKj0AAAAAEeGjAAAAAAEAAAAAAAAAAAAAAAIAAAABQUJDAAAAAAAIFNYJS7uXxTrL2yGlbGt9yJMu/LtaZAxq0b4Ht6QqPQAAAAA7msoAAAAAAJEE7TG5CAUVetC5u/vB41QBPtnX7IY25gdEgh3Ys249AAAAAUNERgAAAAAACBTWCUu7l8U6y9shpWxrfciTLvy7WmQMatG+B7ekKj0AAAAAEeGjAAAAAAEAAAAAAAAAAA=="))
+		Expect(tB64).Should(Equal(expected))
 	})
 
 	It("should return a correct unmarshalled bytes and operation", func() {
@@ -104,24 +91,5 @@ var _ = Describe("Creating transaction XDR with path payment operation", func() 
 		Expect(err).NotTo(HaveOccurred())
 		Expect(bytesRead).Should(Equal(220))
 		Expect(len(unmarshalledTx.Operations)).Should(Equal(1))
-
-		By("adding two or more path payment operation")
-		tx = xdr.Transaction{
-			SourceAccount: Source,
-			Fee:           10,
-			SeqNum:        xdr.SequenceNumber(1),
-			Memo:          Memo,
-		}
-		transactionBuilder = builder.GetInstance(&tx)
-		operationsArr := []string{opB64, opB64, opB64}
-		transactionBuilder.MakeAllOperations(operationsArr)
-		tB64, err = transactionBuilder.ToBase64()
-		Expect(err).NotTo(HaveOccurred())
-		rawr = strings.NewReader(tB64)
-		b64r = base64.NewDecoder(base64.StdEncoding, rawr)
-		bytesRead, err = xdr.Unmarshal(b64r, &unmarshalledTx)
-		Expect(err).NotTo(HaveOccurred())
-		Expect(bytesRead).Should(Equal(532))
-		Expect(len(unmarshalledTx.Operations)).Should(Equal(3))
 	})
 })

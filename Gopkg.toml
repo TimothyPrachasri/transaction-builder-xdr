@@ -26,6 +26,10 @@
 
 
 [[constraint]]
+  branch = "master"
+  name = "github.com/Kafakk/xdr-builder"
+
+[[constraint]]
   name = "github.com/onsi/ginkgo"
   version = "1.6.0"
 
@@ -40,6 +44,10 @@
 [[constraint]]
   branch = "master"
   name = "github.com/stellar/go"
+
+[[constraint]]
+  branch = "master"
+  name = "gitlab.com/lightnet-thailand/xdr-builder"
 
 [prune]
   go-tests = true

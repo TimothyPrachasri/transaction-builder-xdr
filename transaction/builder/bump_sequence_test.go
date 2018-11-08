@@ -5,6 +5,8 @@ import (
 	"strings"
 	builder "transaction-builder-xdr/transaction/builder"
 
+	xdrBuilder "gitlab.com/lightnet-thailand/xdr-builder"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/stellar/go/xdr"
@@ -18,13 +20,7 @@ var _ = Describe("Creating transaction XDR with payment operation", func() {
 	BeforeEach(func() {
 		var sequenceNumber uint64
 		sequenceNumber = 1008097543847999
-		body := xdr.BumpSequenceOp{
-			BumpTo: xdr.SequenceNumber(sequenceNumber),
-		}
-		op := xdr.Operation{}
-		op.Body, err = xdr.NewOperationBody(xdr.OperationTypeBumpSequence, body)
-		Expect(err).NotTo(HaveOccurred())
-		opB64, err = xdr.MarshalBase64(op)
+		opB64, err = xdrBuilder.BumpSequence(SourceAddr, sequenceNumber)
 		Expect(err).NotTo(HaveOccurred())
 	})
 
@@ -42,8 +38,9 @@ var _ = Describe("Creating transaction XDR with payment operation", func() {
 		transactionBuilder := builder.GetInstance(&tx)
 		transactionBuilder.MakeOperation(opB64)
 		tB64, err = transactionBuilder.ToBase64()
+		expected := "AAAAAFsAPNHwcy2ZPYftEEoI+dAPr0ZBN+vuXUKPEKcq2mmtAAAACgAAAAAAAAABAAAAAAAAAAAAAAABAAAAAQAAAABbADzR8HMtmT2H7RBKCPnQD69GQTfr7l1CjxCnKtpprQAAAAsAA5TcAAAAPwAAAAA="
 		Expect(err).NotTo(HaveOccurred())
-		Expect(tB64).Should(Equal("AAAAABjCG5iSDJdtHOz38Hfkb0RYQP11Tu5cdDF+Teqp/7GLAAAACgAAAAAAAAABAAAAAAAAAAAAAAABAAAAAAAAAAsAA5TcAAAAPwAAAAA="))
+		Expect(tB64).Should(Equal(expected))
 	})
 
 	It("should return a correct unmarshalled bytes and operation", func() {
@@ -65,7 +62,7 @@ var _ = Describe("Creating transaction XDR with payment operation", func() {
 		rawr := strings.NewReader(tB64)
 		b64r := base64.NewDecoder(base64.StdEncoding, rawr)
 		bytesRead, err = xdr.Unmarshal(b64r, &unmarshalledTx)
-		Expect(bytesRead).Should(Equal(80))
+		Expect(bytesRead).Should(Equal(116))
 		Expect(len(unmarshalledTx.Operations)).Should(Equal(1))
 	})
 })

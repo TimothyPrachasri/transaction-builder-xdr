@@ -5,10 +5,10 @@ import (
 	"strings"
 	builder "transaction-builder-xdr/transaction/builder"
 
-	xdrBuilder "github.com/Kafakk/xdr-builder"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/stellar/go/xdr"
+	xdrBuilder "gitlab.com/lightnet-thailand/xdr-builder"
 )
 
 var _ = Describe("Creating transaction XDR with payment operation", func() {
@@ -21,16 +21,8 @@ var _ = Describe("Creating transaction XDR with payment operation", func() {
 		if err != nil {
 			panic(err)
 		}
-		var limit uint64
-		limit = 1000
-		body := xdr.ChangeTrustOp{
-			Line:  asset.XDRAsset,
-			Limit: xdr.Int64(limit),
-		}
-		op := xdr.Operation{}
-		op.Body, err = xdr.NewOperationBody(xdr.OperationTypeChangeTrust, body)
-		Expect(err).NotTo(HaveOccurred())
-		opB64, err = xdr.MarshalBase64(op)
+		limit := "1000"
+		opB64, err = xdrBuilder.ChangeTrust(SourceAddr, asset, limit)
 		Expect(err).NotTo(HaveOccurred())
 	})
 
@@ -48,8 +40,9 @@ var _ = Describe("Creating transaction XDR with payment operation", func() {
 		transactionBuilder := builder.GetInstance(&tx)
 		transactionBuilder.MakeOperation(opB64)
 		tB64, err = transactionBuilder.ToBase64()
+		expected := "AAAAAFsAPNHwcy2ZPYftEEoI+dAPr0ZBN+vuXUKPEKcq2mmtAAAACgAAAAAAAAABAAAAAAAAAAAAAAABAAAAAQAAAABbADzR8HMtmT2H7RBKCPnQD69GQTfr7l1CjxCnKtpprQAAAAYAAAABQUJDAAAAAAAIFNYJS7uXxTrL2yGlbGt9yJMu/LtaZAxq0b4Ht6QqPQAAAAJUC+QAAAAAAA=="
 		Expect(err).NotTo(HaveOccurred())
-		Expect(tB64).Should(Equal("AAAAABjCG5iSDJdtHOz38Hfkb0RYQP11Tu5cdDF+Teqp/7GLAAAACgAAAAAAAAABAAAAAAAAAAAAAAABAAAAAAAAAAYAAAABQUJDAAAAAAAIFNYJS7uXxTrL2yGlbGt9yJMu/LtaZAxq0b4Ht6QqPQAAAAAAAAPoAAAAAA=="))
+		Expect(tB64).Should(Equal(expected))
 	})
 
 	It("should return a correct unmarshalled bytes and operation", func() {
@@ -71,7 +64,7 @@ var _ = Describe("Creating transaction XDR with payment operation", func() {
 		rawr := strings.NewReader(tB64)
 		b64r := base64.NewDecoder(base64.StdEncoding, rawr)
 		bytesRead, err = xdr.Unmarshal(b64r, &unmarshalledTx)
-		Expect(bytesRead).Should(Equal(124))
+		Expect(bytesRead).Should(Equal(160))
 		Expect(len(unmarshalledTx.Operations)).Should(Equal(1))
 	})
 })

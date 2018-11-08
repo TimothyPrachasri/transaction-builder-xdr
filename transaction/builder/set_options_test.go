@@ -8,6 +8,7 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/stellar/go/xdr"
+	xdrBuilder "gitlab.com/lightnet-thailand/xdr-builder"
 )
 
 var _ = Describe("Creating transaction XDR with payment operation", func() {
@@ -17,16 +18,7 @@ var _ = Describe("Creating transaction XDR with payment operation", func() {
 
 	BeforeEach(func() {
 		inflationDestinationPublicKey := "GCIQJ3JRXEEAKFL22C43X66B4NKACPWZ27WIMNXGA5CIEHOYWNXD3EQR"
-		var destination xdr.AccountId
-		err = destination.SetAddress(inflationDestinationPublicKey)
-		Expect(err).NotTo(HaveOccurred())
-		body := xdr.SetOptionsOp{
-			InflationDest: &destination,
-		}
-		op := xdr.Operation{}
-		op.Body, err = xdr.NewOperationBody(xdr.OperationTypeSetOptions, body)
-		Expect(err).NotTo(HaveOccurred())
-		opB64, err = xdr.MarshalBase64(op)
+		opB64, err = xdrBuilder.SetOptionInflation(SourceAddr, inflationDestinationPublicKey)
 		Expect(err).NotTo(HaveOccurred())
 	})
 
@@ -44,8 +36,9 @@ var _ = Describe("Creating transaction XDR with payment operation", func() {
 		transactionBuilder := builder.GetInstance(&tx)
 		transactionBuilder.MakeOperation(opB64)
 		tB64, err = transactionBuilder.ToBase64()
+		expected := "AAAAAFsAPNHwcy2ZPYftEEoI+dAPr0ZBN+vuXUKPEKcq2mmtAAAACgAAAAAAAAABAAAAAAAAAAAAAAABAAAAAQAAAABbADzR8HMtmT2H7RBKCPnQD69GQTfr7l1CjxCnKtpprQAAAAUAAAABAAAAAJEE7TG5CAUVetC5u/vB41QBPtnX7IY25gdEgh3Ys249AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
 		Expect(err).NotTo(HaveOccurred())
-		Expect(tB64).Should(Equal("AAAAABjCG5iSDJdtHOz38Hfkb0RYQP11Tu5cdDF+Teqp/7GLAAAACgAAAAAAAAABAAAAAAAAAAAAAAABAAAAAAAAAAUAAAABAAAAAJEE7TG5CAUVetC5u/vB41QBPtnX7IY25gdEgh3Ys249AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"))
+		Expect(tB64).Should(Equal(expected))
 	})
 
 	It("should return a correct unmarshalled bytes and operation", func() {
@@ -67,7 +60,7 @@ var _ = Describe("Creating transaction XDR with payment operation", func() {
 		rawr := strings.NewReader(tB64)
 		b64r := base64.NewDecoder(base64.StdEncoding, rawr)
 		bytesRead, err = xdr.Unmarshal(b64r, &unmarshalledTx)
-		Expect(bytesRead).Should(Equal(144))
+		Expect(bytesRead).Should(Equal(180))
 		Expect(len(unmarshalledTx.Operations)).Should(Equal(1))
 	})
 })

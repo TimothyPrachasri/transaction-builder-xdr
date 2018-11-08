@@ -5,8 +5,7 @@ import (
 	"strings"
 	builder "transaction-builder-xdr/transaction/builder"
 
-	xdrBuilder "github.com/Kafakk/xdr-builder"
-	"github.com/stellar/go/price"
+	xdrBuilder "gitlab.com/lightnet-thailand/xdr-builder"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -23,21 +22,9 @@ var _ = Describe("Creating transaction XDR with payment operation", func() {
 		Expect(err).NotTo(HaveOccurred())
 		buyingAsset, err := xdrBuilder.SetNativeAsset()
 		Expect(err).NotTo(HaveOccurred())
-		var amount uint64
-		amount = 1000
-		priceString := "7.2"
-		price, err := price.Parse(priceString)
-		Expect(err).NotTo(HaveOccurred())
-		body := xdr.CreatePassiveOfferOp{
-			Selling: sellingAsset.XDRAsset,
-			Buying:  buyingAsset.XDRAsset,
-			Amount:  xdr.Int64(amount) * 10000000,
-			Price:   price,
-		}
-		op := xdr.Operation{}
-		op.Body, err = xdr.NewOperationBody(xdr.OperationTypeCreatePassiveOffer, body)
-		Expect(err).NotTo(HaveOccurred())
-		opB64, err = xdr.MarshalBase64(op)
+		amount := "10000"
+		pricestring := "6.2"
+		opB64, err = xdrBuilder.CreatePassiveOffer(SourceAddr, sellingAsset, buyingAsset, amount, pricestring)
 		Expect(err).NotTo(HaveOccurred())
 	})
 
@@ -55,8 +42,9 @@ var _ = Describe("Creating transaction XDR with payment operation", func() {
 		transactionBuilder := builder.GetInstance(&tx)
 		transactionBuilder.MakeOperation(opB64)
 		tB64, err = transactionBuilder.ToBase64()
+		expected := "AAAAAFsAPNHwcy2ZPYftEEoI+dAPr0ZBN+vuXUKPEKcq2mmtAAAACgAAAAAAAAABAAAAAAAAAAAAAAABAAAAAQAAAABbADzR8HMtmT2H7RBKCPnQD69GQTfr7l1CjxCnKtpprQAAAAQAAAABQUJDAAAAAAAIFNYJS7uXxTrL2yGlbGt9yJMu/LtaZAxq0b4Ht6QqPQAAAAAAAAAXSHboAAAAAB8AAAAFAAAAAA=="
 		Expect(err).NotTo(HaveOccurred())
-		Expect(tB64).Should(Equal("AAAAABjCG5iSDJdtHOz38Hfkb0RYQP11Tu5cdDF+Teqp/7GLAAAACgAAAAAAAAABAAAAAAAAAAAAAAABAAAAAAAAAAQAAAABQUJDAAAAAAAIFNYJS7uXxTrL2yGlbGt9yJMu/LtaZAxq0b4Ht6QqPQAAAAAAAAACVAvkAAAAACQAAAAFAAAAAA=="))
+		Expect(tB64).Should(Equal(expected))
 	})
 
 	It("should return a correct unmarshalled bytes and operation", func() {
@@ -78,7 +66,7 @@ var _ = Describe("Creating transaction XDR with payment operation", func() {
 		rawr := strings.NewReader(tB64)
 		b64r := base64.NewDecoder(base64.StdEncoding, rawr)
 		bytesRead, err = xdr.Unmarshal(b64r, &unmarshalledTx)
-		Expect(bytesRead).Should(Equal(136))
+		Expect(bytesRead).Should(Equal(172))
 		Expect(len(unmarshalledTx.Operations)).Should(Equal(1))
 	})
 })

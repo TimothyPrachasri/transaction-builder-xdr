@@ -5,6 +5,8 @@ import (
 	"strings"
 	builder "transaction-builder-xdr/transaction/builder"
 
+	xdrBuilder "gitlab.com/lightnet-thailand/xdr-builder"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/stellar/go/xdr"
@@ -18,17 +20,7 @@ var _ = Describe("Creating transaction XDR with payment operation", func() {
 	BeforeEach(func() {
 		name := "name"
 		value := "value"
-		dataname := xdr.String64(name)
-		valueByte := []byte(value)
-		datavalue := xdr.DataValue(valueByte)
-		body := xdr.ManageDataOp{
-			DataName:  dataname,
-			DataValue: &datavalue,
-		}
-		op := xdr.Operation{}
-		op.Body, err = xdr.NewOperationBody(xdr.OperationTypeManageData, body)
-		Expect(err).NotTo(HaveOccurred())
-		opB64, err = xdr.MarshalBase64(op)
+		opB64, err = xdrBuilder.ManageData(SourceAddr, name, value)
 		Expect(err).NotTo(HaveOccurred())
 	})
 
@@ -46,8 +38,9 @@ var _ = Describe("Creating transaction XDR with payment operation", func() {
 		transactionBuilder := builder.GetInstance(&tx)
 		transactionBuilder.MakeOperation(opB64)
 		tB64, err = transactionBuilder.ToBase64()
+		expected := "AAAAAFsAPNHwcy2ZPYftEEoI+dAPr0ZBN+vuXUKPEKcq2mmtAAAACgAAAAAAAAABAAAAAAAAAAAAAAABAAAAAQAAAABbADzR8HMtmT2H7RBKCPnQD69GQTfr7l1CjxCnKtpprQAAAAoAAAAEbmFtZQAAAAEAAAAFdmFsdWUAAAAAAAAA"
 		Expect(err).NotTo(HaveOccurred())
-		Expect(tB64).Should(Equal("AAAAABjCG5iSDJdtHOz38Hfkb0RYQP11Tu5cdDF+Teqp/7GLAAAACgAAAAAAAAABAAAAAAAAAAAAAAABAAAAAAAAAAoAAAAEbmFtZQAAAAEAAAAFdmFsdWUAAAAAAAAA"))
+		Expect(tB64).Should(Equal(expected))
 	})
 
 	It("should return a correct unmarshalled bytes and operation", func() {
@@ -69,7 +62,7 @@ var _ = Describe("Creating transaction XDR with payment operation", func() {
 		rawr := strings.NewReader(tB64)
 		b64r := base64.NewDecoder(base64.StdEncoding, rawr)
 		bytesRead, err = xdr.Unmarshal(b64r, &unmarshalledTx)
-		Expect(bytesRead).Should(Equal(96))
+		Expect(bytesRead).Should(Equal(132))
 		Expect(len(unmarshalledTx.Operations)).Should(Equal(1))
 	})
 })
