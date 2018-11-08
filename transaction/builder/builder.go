@@ -102,7 +102,8 @@ func (transactionBuilder *TransactionBuilder) ToBase64() (string, error) {
 // GetInstance is like a new object method in OOP
 func GetInstance(transaction ...*xdr.Transaction) (result TransactionBuilder) {
 	if len(transaction) == 1 {
-		result = TransactionBuilder{TransactionXDR: transaction[0]}
+		tx := *transaction[0]
+		result = TransactionBuilder{TransactionXDR: &tx}
 		return
 	}
 	result = TransactionBuilder{TransactionXDR: &xdr.Transaction{}}

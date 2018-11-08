@@ -25,6 +25,7 @@ var (
 	Source     xdr.AccountId
 	Memo       xdr.Memo
 	err        error
+	tx         xdr.Transaction
 )
 
 var _ = BeforeSuite(func() {
@@ -39,5 +40,11 @@ var _ = BeforeSuite(func() {
 	err = Source.SetAddress(Skp.Address())
 	if err != nil {
 		panic(err)
+	}
+	tx = xdr.Transaction{
+		SourceAccount: Source,
+		Fee:           10,
+		SeqNum:        xdr.SequenceNumber(1),
+		Memo:          Memo,
 	}
 })

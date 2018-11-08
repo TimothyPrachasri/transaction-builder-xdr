@@ -32,7 +32,7 @@ func ExampleUsingTransactionBuilder() {
 	body := xdr.PaymentOp{
 		Destination: destination,
 		Asset:       asset,
-		Amount:      100,
+		Amount:      1000000000,
 	}
 	op := xdr.Operation{}
 	op.Body, err = xdr.NewOperationBody(xdr.OperationTypePayment, body)
@@ -51,7 +51,7 @@ func ExampleUsingTransactionBuilder() {
 	tx := xdr.Transaction{
 		SourceAccount: source,
 		Fee:           xdr.Uint32(int(defaultBaseFee) * 1),
-		SeqNum:        xdr.SequenceNumber(2517825793032193),
+		SeqNum:        xdr.SequenceNumber(2517825793032198),
 		Memo:          memo,
 	}
 

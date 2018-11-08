@@ -7,14 +7,13 @@ import (
 )
 
 func main() {
-	blob := "AAAAAFsAPNHwcy2ZPYftEEoI+dAPr0ZBN+vuXUKPEKcq2mmtAAAAZAAI8fMAAAABAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAdfeOkY7szblb3J8lDy2i0o1ssnDcDOkFjxjwFx/sV+gAAAAAAAAAAAAAAGQAAAAAAAAAASraaa0AAABAQVkwp5giAPb+it3dZlGMDzC7YmbaC3ESwUF1ud440EYHSTCsa2lW547GSTZMFfRgb2gOAmuKooD7lH4qYC0dAg=="
-	if _, err := horizon.DefaultTestNetClient.LoadAccount("GD3F7GSWWTP6MQVFO6ZT64TDS7XR2KUPKCFCQVBG4TF6DCYLF5SWJT7Z"); err != nil {
-		panic(err)
-	}
+	blob := "AAAAAFsAPNHwcy2ZPYftEEoI+dAPr0ZBN+vuXUKPEKcq2mmtAAAAZAAI8fMAAAAGAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAdfeOkY7szblb3J8lDy2i0o1ssnDcDOkFjxjwFx/sV+gAAAAAAAAAADuaygAAAAAAAAAAASraaa0AAABAgoMYas+6bNnZHvW4tVFg+ZNYNOmzI+WYwqf/ZRJ22m3KOQ4fOHQbA8bY1IePnsGquwh1lfH3y8HJ0fBaK/jMCg=="
 	resp, err := horizon.DefaultTestNetClient.SubmitTransaction(blob)
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Println("transaction posted in ledger:", resp.Ledger)
+	fmt.Println("Successful Transaction:")
+	fmt.Println("Ledger:", resp.Ledger)
+	fmt.Println("Hash:", resp.Hash)
 }

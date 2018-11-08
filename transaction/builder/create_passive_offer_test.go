@@ -33,12 +33,6 @@ var _ = Describe("Creating transaction XDR with payment operation", func() {
 		var (
 			tB64 string
 		)
-		tx := xdr.Transaction{
-			SourceAccount: Source,
-			Fee:           10,
-			SeqNum:        xdr.SequenceNumber(1),
-			Memo:          Memo,
-		}
 		transactionBuilder := builder.GetInstance(&tx)
 		transactionBuilder.MakeOperation(opB64)
 		tB64, err = transactionBuilder.ToBase64()
@@ -54,12 +48,6 @@ var _ = Describe("Creating transaction XDR with payment operation", func() {
 			unmarshalledTx xdr.Transaction
 			bytesRead      int
 		)
-		tx := xdr.Transaction{
-			SourceAccount: Source,
-			Fee:           10,
-			SeqNum:        xdr.SequenceNumber(1),
-			Memo:          Memo,
-		}
 		transactionBuilder := builder.GetInstance(&tx)
 		transactionBuilder.MakeOperation(opB64)
 		tB64, err = transactionBuilder.ToBase64()
