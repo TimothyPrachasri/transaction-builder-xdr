@@ -10,15 +10,10 @@ import (
 	"github.com/stellar/go/xdr"
 )
 
+// TransactionEnvelope represents a struct for collectioning crucials fields for encryping to envelope
 type TransactionEnvelope struct {
 	TransactionXDR *xdr.Transaction
 	Signatures     []xdr.DecoratedSignature `xdrmaxsize:"20"`
-}
-
-// SignerForm is a form for transaction signing protocol.
-type SignerForm struct {
-	Signer            string
-	NetworkPassPhrase string
 }
 
 // Sign method will be called after make or makeAll method for transaction signing protocol.
@@ -44,9 +39,9 @@ func (transactionEnvelope *TransactionEnvelope) Sign(signer, networkPassPhrase s
 }
 
 // SignAll is similar to Sign method but it will receive an array of SignerForm which contains signer and networkPassPhrase.
-func (transactionEnvelope *TransactionEnvelope) SignAll(forms []SignerForm) (err error) {
-	for _, ech := range forms {
-		err := transactionEnvelope.Sign(ech.Signer, ech.NetworkPassPhrase)
+func (transactionEnvelope *TransactionEnvelope) SignAll(signers []string, networkPassPhrase string) (err error) {
+	for _, ech := range signers {
+		err := transactionEnvelope.Sign(ech, networkPassPhrase)
 		if err != nil {
 			break
 		}

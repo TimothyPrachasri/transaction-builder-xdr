@@ -293,7 +293,6 @@
     "github.com/stellar/go/clients/horizon",
     "github.com/stellar/go/keypair",
     "github.com/stellar/go/network",
-    "github.com/stellar/go/price",
     "github.com/stellar/go/xdr",
     "gitlab.com/lightnet-thailand/xdr-builder",
   ]
