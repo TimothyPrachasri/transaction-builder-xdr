@@ -15,6 +15,9 @@ This is a library for parsing transaction and encoded payment xdr to encoded tra
 		Fee:           xdr.Uint32(int(100) * 1),
 		SeqNum:        xdr.SequenceNumber(1),
 		Memo:          Memo,
+		Operations: []xdr.Operation{
+			{Body: body},
+		},
 	}
 	transactionBuilder = xdrSigner.GetBuilderInstance(&tx)
 	tB64, err = transactionBuilder.ToBase64()
