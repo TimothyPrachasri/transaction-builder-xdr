@@ -30,6 +30,10 @@
   name = "github.com/Kafakk/xdr-builder"
 
 [[constraint]]
+  branch = "master"
+  name = "github.com/TimothyPrachasri/transaction-builder-xdr"
+
+[[constraint]]
   name = "github.com/onsi/ginkgo"
   version = "1.6.0"
 

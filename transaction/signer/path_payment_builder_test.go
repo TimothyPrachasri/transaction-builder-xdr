@@ -4,7 +4,7 @@ import (
 	"encoding/base64"
 	"strings"
 
-	xdrSigner "transaction-builder-xdr/transaction/signer"
+	xdrSigner "github.com/TimothyPrachasri/transaction-builder-xdr/transaction/signer"
 
 	xdrBuilder "github.com/Kafakk/xdr-builder"
 	. "github.com/onsi/ginkgo"
