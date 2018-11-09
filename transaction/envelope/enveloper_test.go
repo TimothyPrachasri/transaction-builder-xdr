@@ -22,7 +22,7 @@ var _ = Describe("Sending enveloped transaction to Horizon server", func() {
 
 	BeforeEach(func() {
 		var asset xdrBuilder.Asset
-		opB64, err = xdrBuilder.Payment(SourceAddr, DestAddr, asset, "10")
+		opB64, err = xdrBuilder.Payment(SourceAddr, DestAddr, asset, "0.01")
 		for i := 0; i <= 99; i++ {
 			opB64Arr = append(opB64Arr, opB64)
 		}
@@ -41,9 +41,9 @@ var _ = Describe("Sending enveloped transaction to Horizon server", func() {
 		Expect(err).NotTo(HaveOccurred())
 		sequenceNum, err := strconv.ParseInt(acct.Sequence, 10, 64)
 		Expect(err).NotTo(HaveOccurred())
-		tx.SeqNum = xdr.SequenceNumber(sequenceNum + 1)
-		tx.Fee = xdr.Uint32(DefaultBaseFee)
 		transactionBuilder = builder.GetInstance(&tx)
+		transactionBuilder.MakeSequenceNumber(uint64(sequenceNum + 1))
+		transactionBuilder.MakeFee(xdr.Uint32(DefaultBaseFee))
 		transactionBuilder.MakeOperation(opB64)
 		tB64, err = transactionBuilder.ToBase64()
 		Expect(err).NotTo(HaveOccurred())
@@ -61,9 +61,9 @@ var _ = Describe("Sending enveloped transaction to Horizon server", func() {
 		Expect(err).NotTo(HaveOccurred())
 		sequenceNum, err = strconv.ParseInt(acct.Sequence, 10, 64)
 		Expect(err).NotTo(HaveOccurred())
-		tx.SeqNum = xdr.SequenceNumber(sequenceNum + 1)
-		tx.Fee = xdr.Uint32(int(100) * 100)
 		transactionBuilder = builder.GetInstance(&tx)
+		transactionBuilder.MakeSequenceNumber(uint64(sequenceNum + 1))
+		transactionBuilder.MakeFee(xdr.Uint32(int(100) * 100))
 		transactionBuilder.MakeAllOperations(opB64Arr)
 		tB64, err = transactionBuilder.ToBase64()
 		Expect(err).NotTo(HaveOccurred())
@@ -72,7 +72,6 @@ var _ = Describe("Sending enveloped transaction to Horizon server", func() {
 		err = transactionEnvelope.Sign(SourceSeed, PassPhrase)
 		Expect(err).NotTo(HaveOccurred())
 		txeB64, err = transactionEnvelope.ToBase64()
-
 		_, err = horizon.DefaultTestNetClient.SubmitTransaction(txeB64)
 		Expect(err).NotTo(HaveOccurred())
 	})
