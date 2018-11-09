@@ -11,6 +11,18 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:1dbf78128e6c22d5968adbd215864e9965586b3d972601fc81bc23a51df95f2b"
+  name = "github.com/TimothyPrachasri/transaction-builder-xdr"
+  packages = [
+    "transaction/builder",
+    "transaction/envelope",
+    "utils",
+  ]
+  pruneopts = "UT"
+  revision = "41b5bfd6031cdf4124f4101d9501f1bd02747c15"
+
+[[projects]]
+  branch = "master"
   digest = "1:47ea4fbe2ab4aeb9808502c51e657041c2e49b36b83fc1c1a349135cdf16342f"
   name = "github.com/agl/ed25519"
   packages = [
@@ -287,6 +299,9 @@
   analyzer-version = 1
   input-imports = [
     "github.com/Kafakk/xdr-builder",
+    "github.com/TimothyPrachasri/transaction-builder-xdr/transaction/builder",
+    "github.com/TimothyPrachasri/transaction-builder-xdr/transaction/envelope",
+    "github.com/TimothyPrachasri/transaction-builder-xdr/utils",
     "github.com/onsi/ginkgo",
     "github.com/onsi/gomega",
     "github.com/pkg/errors",

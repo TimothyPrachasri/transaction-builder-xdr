@@ -3,7 +3,8 @@ package transactionbuilder_test
 import (
 	"encoding/base64"
 	"strings"
-	builder "transaction-builder-xdr/transaction/builder"
+
+	builder "github.com/TimothyPrachasri/transaction-builder-xdr/transaction/builder"
 
 	xdrBuilder "gitlab.com/lightnet-thailand/xdr-builder"
 

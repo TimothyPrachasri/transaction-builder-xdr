@@ -2,8 +2,9 @@ package transactionenveloper_test
 
 import (
 	"strconv"
-	builder "transaction-builder-xdr/transaction/builder"
-	enveloper "transaction-builder-xdr/transaction/envelope"
+
+	builder "github.com/TimothyPrachasri/transaction-builder-xdr/transaction/builder"
+	enveloper "github.com/TimothyPrachasri/transaction-builder-xdr/transaction/envelope"
 
 	"github.com/stellar/go/xdr"
 	xdrBuilder "gitlab.com/lightnet-thailand/xdr-builder"

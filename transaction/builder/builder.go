@@ -3,7 +3,8 @@ package transactionbuilder
 import (
 	"bytes"
 	"encoding/base64"
-	"transaction-builder-xdr/utils"
+
+	"github.com/TimothyPrachasri/transaction-builder-xdr/utils"
 
 	"github.com/pkg/errors"
 	"github.com/stellar/go/xdr"
