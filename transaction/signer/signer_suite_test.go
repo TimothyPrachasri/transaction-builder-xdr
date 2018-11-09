@@ -1,4 +1,4 @@
-package transactionenveloper_test
+package xdrsigner_test
 
 import (
 	. "github.com/onsi/ginkgo"
@@ -11,7 +11,7 @@ import (
 
 func TestXdr(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Enveloper Suite")
+	RunSpecs(t, "Signer Suite")
 }
 
 var (
@@ -39,12 +39,13 @@ var _ = BeforeSuite(func() {
 	PassPhrase = "Test SDF Network ; September 2015"
 	Memo, err = xdr.NewMemo(xdr.MemoTypeMemoNone, nil)
 	DefaultBaseFee = 100
+	err = Source.SetAddress(Skp.Address())
 	Expect(err).NotTo(HaveOccurred())
 	err = Source.SetAddress(Skp.Address())
 	Expect(err).NotTo(HaveOccurred())
 	tx = xdr.Transaction{
 		SourceAccount: Source,
-		Fee:           xdr.Uint32(int(100) * 1),
+		Fee:           10,
 		SeqNum:        xdr.SequenceNumber(1),
 		Memo:          Memo,
 	}

@@ -1,15 +1,16 @@
-package transactionbuilder_test
+package xdrsigner_test
 
 import (
 	"encoding/base64"
 	"strings"
 
-	builder "github.com/TimothyPrachasri/transaction-builder-xdr/transaction/builder"
+	xdrSigner "transaction-builder-xdr/transaction/signer"
+
+	xdrBuilder "gitlab.com/lightnet-thailand/xdr-builder"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/stellar/go/xdr"
-	xdrBuilder "gitlab.com/lightnet-thailand/xdr-builder"
 )
 
 var _ = Describe("Creating transaction XDR with payment operation", func() {
@@ -18,42 +19,39 @@ var _ = Describe("Creating transaction XDR with payment operation", func() {
 	)
 
 	BeforeEach(func() {
-		asset, err := xdrBuilder.SetAsset("ABC", "GAEBJVQJJO5ZPRJ2ZPNSDJLMNN64REZO7S5VUZAMNLI34B5XUQVD3URR")
-		if err != nil {
-			panic(err)
-		}
-		limit := "1000"
-		opB64, err = xdrBuilder.ChangeTrust(SourceAddr, asset, limit)
+		destinationPublicKey := "GDKV36XRERL7HVQ5GKRAV47ZLEPIZMFM7MMLEO4NKQOWFPL5NCIEW3GR"
+		startingBalance := "12.21"
+		opB64, err = xdrBuilder.CreateAccount(SourceAddr, destinationPublicKey, startingBalance)
 		Expect(err).NotTo(HaveOccurred())
 	})
 
 	It("should return a correct xdr transaction string", func() {
-		By("adding one change trust operation")
+		By("adding one create account operation")
 		var (
 			tB64 string
 		)
-		transactionBuilder := builder.GetInstance(&tx)
+		transactionBuilder := xdrSigner.GetBuilderInstance(&tx)
 		transactionBuilder.MakeOperation(opB64)
 		tB64, err = transactionBuilder.ToBase64()
-		expected := "AAAAAFsAPNHwcy2ZPYftEEoI+dAPr0ZBN+vuXUKPEKcq2mmtAAAACgAAAAAAAAABAAAAAAAAAAAAAAABAAAAAQAAAABbADzR8HMtmT2H7RBKCPnQD69GQTfr7l1CjxCnKtpprQAAAAYAAAABQUJDAAAAAAAIFNYJS7uXxTrL2yGlbGt9yJMu/LtaZAxq0b4Ht6QqPQAAAAJUC+QAAAAAAA=="
+		expected := "AAAAAFsAPNHwcy2ZPYftEEoI+dAPr0ZBN+vuXUKPEKcq2mmtAAAACgAAAAAAAAABAAAAAAAAAAAAAAABAAAAAQAAAABbADzR8HMtmT2H7RBKCPnQD69GQTfr7l1CjxCnKtpprQAAAAAAAAAA1V368SRX89YdMqIK8/lZHoywrPsYsjuNVB1ivX1okEsAAAAAB0cZIAAAAAA="
 		Expect(err).NotTo(HaveOccurred())
 		Expect(tB64).Should(Equal(expected))
 	})
 
 	It("should return a correct unmarshalled bytes and operation", func() {
-		By("adding one change trust operation")
+		By("adding one create account operation")
 		var (
 			tB64           string
 			unmarshalledTx xdr.Transaction
 			bytesRead      int
 		)
-		transactionBuilder := builder.GetInstance(&tx)
+		transactionBuilder := xdrSigner.GetBuilderInstance(&tx)
 		transactionBuilder.MakeOperation(opB64)
 		tB64, err = transactionBuilder.ToBase64()
 		rawr := strings.NewReader(tB64)
 		b64r := base64.NewDecoder(base64.StdEncoding, rawr)
 		bytesRead, err = xdr.Unmarshal(b64r, &unmarshalledTx)
-		Expect(bytesRead).Should(Equal(160))
+		Expect(bytesRead).Should(Equal(152))
 		Expect(len(unmarshalledTx.Operations)).Should(Equal(1))
 	})
 })

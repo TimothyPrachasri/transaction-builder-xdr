@@ -1,4 +1,4 @@
-package transactionenveloper
+package xdrsigner
 
 import (
 	"bytes"
@@ -76,8 +76,8 @@ func (transactionEnvelope *TransactionEnvelope) ToBase64() (string, error) {
 	return base64.StdEncoding.EncodeToString(bs), nil
 }
 
-// GetInstance is like a new object method in OOP
-func GetInstance(transactionXdrBase64 string) (result TransactionEnvelope) {
+// GetEnveloperInstance is like a new object method in OOP
+func GetEnveloperInstance(transactionXdrBase64 string) (result TransactionEnvelope) {
 	var transaction xdr.Transaction
 	xdr.SafeUnmarshalBase64(transactionXdrBase64, &transaction)
 	result = TransactionEnvelope{TransactionXDR: &transaction}

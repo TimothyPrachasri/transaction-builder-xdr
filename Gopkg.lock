@@ -299,9 +299,9 @@
   analyzer-version = 1
   input-imports = [
     "github.com/Kafakk/xdr-builder",
-    "github.com/TimothyPrachasri/transaction-builder-xdr/transaction/builder",
-    "github.com/TimothyPrachasri/transaction-builder-xdr/transaction/envelope",
-    "github.com/TimothyPrachasri/transaction-builder-xdr/utils",
+    "transaction-builder-xdr/transaction/signer",
+    "transaction-builder-xdr/transaction/signer",
+    "transaction-builder-xdr/utils",
     "github.com/onsi/ginkgo",
     "github.com/onsi/gomega",
     "github.com/pkg/errors",

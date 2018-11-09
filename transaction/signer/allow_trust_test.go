@@ -1,10 +1,10 @@
-package transactionbuilder_test
+package xdrsigner_test
 
 import (
 	"encoding/base64"
 	"strings"
 
-	builder "github.com/TimothyPrachasri/transaction-builder-xdr/transaction/builder"
+	xdrSigner "transaction-builder-xdr/transaction/signer"
 
 	xdrBuilder "gitlab.com/lightnet-thailand/xdr-builder"
 
@@ -32,7 +32,7 @@ var _ = Describe("Creating transaction XDR with payment operation", func() {
 		var (
 			tB64 string
 		)
-		transactionBuilder := builder.GetInstance(&tx)
+		transactionBuilder := xdrSigner.GetBuilderInstance(&tx)
 		transactionBuilder.MakeOperation(opB64)
 		tB64, err = transactionBuilder.ToBase64()
 		expected := "AAAAAFsAPNHwcy2ZPYftEEoI+dAPr0ZBN+vuXUKPEKcq2mmtAAAACgAAAAAAAAABAAAAAAAAAAAAAAABAAAAAQAAAABbADzR8HMtmT2H7RBKCPnQD69GQTfr7l1CjxCnKtpprQAAAAcAAAAAdfeOkY7szblb3J8lDy2i0o1ssnDcDOkFjxjwFx/sV+gAAAABQUJDAAAAAAEAAAAA"
@@ -47,7 +47,7 @@ var _ = Describe("Creating transaction XDR with payment operation", func() {
 			unmarshalledTx xdr.Transaction
 			bytesRead      int
 		)
-		transactionBuilder := builder.GetInstance(&tx)
+		transactionBuilder := xdrSigner.GetBuilderInstance(&tx)
 		transactionBuilder.MakeOperation(opB64)
 		tB64, err = transactionBuilder.ToBase64()
 		rawr := strings.NewReader(tB64)

@@ -1,10 +1,10 @@
-package transactionbuilder_test
+package xdrsigner_test
 
 import (
 	"encoding/base64"
 	"strings"
 
-	builder "github.com/TimothyPrachasri/transaction-builder-xdr/transaction/builder"
+	xdrSigner "transaction-builder-xdr/transaction/signer"
 
 	xdrBuilder "github.com/Kafakk/xdr-builder"
 	. "github.com/onsi/ginkgo"
@@ -54,7 +54,7 @@ var _ = Describe("Creating transaction XDR with path payment operation", func() 
 		var (
 			tB64 string
 		)
-		transactionBuilder := builder.GetInstance(&tx)
+		transactionBuilder := xdrSigner.GetBuilderInstance(&tx)
 		transactionBuilder.MakeOperation(opB64)
 		tB64, err = transactionBuilder.ToBase64()
 		expected := "AAAAAFsAPNHwcy2ZPYftEEoI+dAPr0ZBN+vuXUKPEKcq2mmtAAAACgAAAAAAAAABAAAAAAAAAAAAAAABAAAAAAAAAAIAAAABQUJDAAAAAAAIFNYJS7uXxTrL2yGlbGt9yJMu/LtaZAxq0b4Ht6QqPQAAAAA7msoAAAAAAJEE7TG5CAUVetC5u/vB41QBPtnX7IY25gdEgh3Ys249AAAAAUNERgAAAAAACBTWCUu7l8U6y9shpWxrfciTLvy7WmQMatG+B7ekKj0AAAAAEeGjAAAAAAEAAAAAAAAAAA=="
@@ -65,12 +65,11 @@ var _ = Describe("Creating transaction XDR with path payment operation", func() 
 	It("should return a correct unmarshalled bytes and operation", func() {
 		By("adding one path payment operation")
 		var (
-			tB64               string
-			unmarshalledTx     xdr.Transaction
-			bytesRead          int
-			transactionBuilder builder.TransactionBuilder
+			tB64           string
+			unmarshalledTx xdr.Transaction
+			bytesRead      int
 		)
-		transactionBuilder = builder.GetInstance(&tx)
+		transactionBuilder := xdrSigner.GetBuilderInstance(&tx)
 		transactionBuilder.MakeOperation(opB64)
 		tB64, err = transactionBuilder.ToBase64()
 		Expect(err).NotTo(HaveOccurred())

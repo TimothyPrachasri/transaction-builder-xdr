@@ -1,10 +1,10 @@
-package transactionbuilder
+package xdrsigner
 
 import (
 	"bytes"
 	"encoding/base64"
 
-	"github.com/TimothyPrachasri/transaction-builder-xdr/utils"
+	"transaction-builder-xdr/utils"
 
 	"github.com/pkg/errors"
 	"github.com/stellar/go/xdr"
@@ -100,8 +100,8 @@ func (transactionBuilder *TransactionBuilder) ToBase64() (string, error) {
 	return base64.StdEncoding.EncodeToString(bs), nil
 }
 
-// GetInstance is like a new object method in OOP
-func GetInstance(transaction ...*xdr.Transaction) (result TransactionBuilder) {
+// GetBuilderInstance is like a new object method in OOP
+func GetBuilderInstance(transaction ...*xdr.Transaction) (result TransactionBuilder) {
 	if len(transaction) == 1 {
 		tx := *transaction[0]
 		result = TransactionBuilder{TransactionXDR: &tx}

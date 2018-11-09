@@ -1,10 +1,9 @@
-package transactionenveloper_test
+package xdrsigner_test
 
 import (
 	"strconv"
 
-	builder "github.com/TimothyPrachasri/transaction-builder-xdr/transaction/builder"
-	enveloper "github.com/TimothyPrachasri/transaction-builder-xdr/transaction/envelope"
+	xdrSigner "transaction-builder-xdr/transaction/signer"
 
 	"github.com/stellar/go/xdr"
 	xdrBuilder "gitlab.com/lightnet-thailand/xdr-builder"
@@ -31,24 +30,24 @@ var _ = Describe("Sending enveloped transaction to Horizon server", func() {
 
 	It("should successfully sent to Horizon", func() {
 		var (
-			transactionBuilder  builder.TransactionBuilder
+			transactionBuilder  xdrSigner.TransactionBuilder
 			tB64                string
 			txeB64              string
-			transactionEnvelope enveloper.TransactionEnvelope
+			transactionEnvelope xdrSigner.TransactionEnvelope
 		)
 		By("Adding Single Operation")
 		acct, err := horizon.DefaultTestNetClient.LoadAccount(SourceAddr)
 		Expect(err).NotTo(HaveOccurred())
 		sequenceNum, err := strconv.ParseInt(acct.Sequence, 10, 64)
 		Expect(err).NotTo(HaveOccurred())
-		transactionBuilder = builder.GetInstance(&tx)
+		transactionBuilder = xdrSigner.GetBuilderInstance(&tx)
 		transactionBuilder.MakeSequenceNumber(uint64(sequenceNum + 1))
 		transactionBuilder.MakeFee(xdr.Uint32(DefaultBaseFee))
 		transactionBuilder.MakeOperation(opB64)
 		tB64, err = transactionBuilder.ToBase64()
 		Expect(err).NotTo(HaveOccurred())
 
-		transactionEnvelope = enveloper.GetInstance(tB64)
+		transactionEnvelope = xdrSigner.GetEnveloperInstance(tB64)
 		err = transactionEnvelope.Sign(SourceSeed, PassPhrase)
 		Expect(err).NotTo(HaveOccurred())
 		txeB64, err = transactionEnvelope.ToBase64()
@@ -61,14 +60,14 @@ var _ = Describe("Sending enveloped transaction to Horizon server", func() {
 		Expect(err).NotTo(HaveOccurred())
 		sequenceNum, err = strconv.ParseInt(acct.Sequence, 10, 64)
 		Expect(err).NotTo(HaveOccurred())
-		transactionBuilder = builder.GetInstance(&tx)
+		transactionBuilder = xdrSigner.GetBuilderInstance(&tx)
 		transactionBuilder.MakeSequenceNumber(uint64(sequenceNum + 1))
 		transactionBuilder.MakeFee(xdr.Uint32(int(100) * 100))
 		transactionBuilder.MakeAllOperations(opB64Arr)
 		tB64, err = transactionBuilder.ToBase64()
 		Expect(err).NotTo(HaveOccurred())
 
-		transactionEnvelope = enveloper.GetInstance(tB64)
+		transactionEnvelope = xdrSigner.GetEnveloperInstance(tB64)
 		err = transactionEnvelope.Sign(SourceSeed, PassPhrase)
 		Expect(err).NotTo(HaveOccurred())
 		txeB64, err = transactionEnvelope.ToBase64()
